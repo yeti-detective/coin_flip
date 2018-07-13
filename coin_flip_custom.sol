@@ -43,7 +43,7 @@ contract CoinFlipCustom {
     }
 
     for (uint j = 0; j < winners.length; j++) {
-
+      
     }
   }
 
