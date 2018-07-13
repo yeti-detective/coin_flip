@@ -6,12 +6,12 @@ contract CoinFlipCustom {
     uint bet;
     address player;
     string guess;
-    string result;
     bool processed;
   }
   mapping (uint => game) public games;
   uint currentGameId = 0;
   uint lastGameProcessed;
+  string lastGameResult = flipCoin();
 
   function placeBet(string _guess) external payable {
     game memory newGame = game(
@@ -19,7 +19,6 @@ contract CoinFlipCustom {
       msg.value,
       msg.sender,
       _guess,
-      flipCoin(),
       false
       );
     games[currentGameId] = newGame;
@@ -34,9 +33,9 @@ contract CoinFlipCustom {
     uint winningBets;
     uint payout = this.balance;
     for (uint i = lastGameProcessed; i <= currentGameId; i++) {
-      winningBets += games[i].bet;
-      if (keccak256(games[i].guess) == keccak256(games[i].result)) {
+      if (keccak256(games[i].guess) == keccak256(lastGameResult)) {
         winners[winners.length] = games[i].player;
+        winningBets += games[i].bet;
       }
     }
     if (winningBets < this.balance) {
