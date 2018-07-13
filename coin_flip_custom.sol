@@ -1,7 +1,7 @@
 pragma solidity ^0.4.16;
 
 contract CoinFlipCustom {
-  struct public game {
+  struct game {
     uint gameId;
     uint bet;
     address player;
@@ -9,7 +9,7 @@ contract CoinFlipCustom {
     string result;
     bool processed;
   }
-  mapping (uint => game) games;
+  mapping (uint => game) public games;
   uint currentGameId = 0;
   uint lastGameProcessed;
 
@@ -31,13 +31,17 @@ contract CoinFlipCustom {
 
   function payWinners() {
     address[] memory winners;
-    uint payout = this.balance * 0.99;
+    uint winningBets;
+    uint payout = this.balance;
     for (uint i = lastGameProcessed; i <= currentGameId; i++) {
-      if (games[i].guess == games[i].result) {
-        winners.push(games[i].player);
+      winningBets += games[i].bet;
+      if (keccak256(games[i].guess) == keccak256(games[i].result)) {
+        winners[winners.length] = games[i].player;
       }
     }
-
+    if (winningBets < this.balance) {
+      payout = (this.balance * 99) / 100;
+    }
   }
 
 }
