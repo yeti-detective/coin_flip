@@ -11,7 +11,7 @@ contract CoinFlipCustom {
   mapping (uint => game) public games;
   uint currentGameId = 0;
   uint lastGameProcessed;
-  string lastGameResult = flipCoin();
+  string lastGameResult;
 
   function placeBet(string _guess) external payable {
     game memory newGame = game(
@@ -40,6 +40,10 @@ contract CoinFlipCustom {
     }
     if (winningBets < this.balance) {
       payout = (this.balance * 99) / 100;
+    }
+
+    for (uint j = 0; j < winners.length; j++) {
+
     }
   }
 
